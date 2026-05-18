@@ -1,352 +1,562 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎀 Hello Kitty Rage Calculator</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
-    
-    :root {
-      --pink-light: #ffe4ed;
-      --pink-main: #ff69b4;
-      --pink-dark: #ff1493;
-      --bow: #ffd700;
-      --bg: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 50%, #ffd6e7 100%);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎀 Rage Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
 
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-    
-    body {
-      font-family: 'Quicksand', sans-serif;
-      background: var(--bg);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
+:root {
+--pink-light: #ffe4ed;
+--pink-main: #ff69b4;
+--pink-dark: #ff1493;
+--bow: #ffd700;
+--bg: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 50%, #ffd6e7 100%);
+}
 
-    /* Floating bows background */
-    .bg-deco {
-      position: fixed; font-size: 2rem; opacity: 0.2; animation: float 8s infinite ease-in-out;
-    }
-    @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
-    .calculator {
-      width: 360px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 25px;
-      padding: 25px;
-      box-shadow: 0 15px 40px rgba(255,105,180,0.4), inset 0 0 0 4px #ff69b4;
-      position: relative;
-      z-index: 10;
-    }
+body {
+font-family: 'Quicksand', sans-serif;
+background: var(--bg);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+position: relative;
+}
 
-    .header {
-      text-align: center; margin-bottom: 15px; position: relative;
-    }
-    .header h1 {
-      font-family: 'Fredoka One', cursive;
-      color: var(--pink-dark);
-      font-size: 1.8rem;
-      text-shadow: 2px 2px 0 #ffb6c1;
-    }
-    .rage-meter {
-      height: 8px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden;
-    }
-    .rage-fill {
-      height: 100%; width: 0%; background: linear-gradient(90deg, #51cf66, #ff69b4, #ff1493);
-      transition: width 0.5s ease;
-    }
+/* Floating bows background */
+.bg-deco {
+position: fixed; font-size: 2rem; opacity: 0.2; animation: float 8s infinite ease-in-out;
+}
+@keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
 
-    .display {
-      background: linear-gradient(135deg, #fff5f8, #ffe4ed);
-      color: var(--pink-dark);
-      font-size: 2.2rem;
-      padding: 20px;
-      text-align: right;
-      border-radius: 15px;
-      border: 3px dashed #ffb6c1;
-      min-height: 70px;
-      box-shadow: inset 0 2px 8px rgba(255,182,193,0.3);
-      margin-bottom: 20px;
-      font-family: 'Fredoka One', cursive;
-      position: relative;
-      overflow: hidden;
-    }
-    .display::before {
-      content: "🎀"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-      font-size: 1.5rem; animation: pulse 2s infinite;
-    }
+.calculator {
+width: 360px;
+background: rgba(255,255,255,0.95);
+border-radius: 25px;
+padding: 25px;
+box-shadow: 0 15px 40px rgba(255,105,180,0.4), inset 0 0 0 4px #ff69b4;
+position: relative;
+z-index: 10;
+}
 
-    .buttons {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-    }
+.header {
+text-align: center; margin-bottom: 15px; position: relative;
+}
+.header h1 {
+font-family: 'Fredoka One', cursive;
+color: var(--pink-dark);
+font-size: 1.8rem;
+text-shadow: 2px 2px 0 #ffb6c1;
+}
+.rage-meter {
+height: 8px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden;
+}
+.rage-fill {
+height: 100%; width: 0%; background: linear-gradient(90deg, #51cf66, #ff69b4, #ff1493);
+transition: width 0.5s ease;
+}
 
-    button {
-      padding: 18px; font-size: 1.3rem; border: 3px solid #ffb6c1; border-radius: 15px;
-      background: linear-gradient(135deg, #fff0f5, #ffe4e1); color: var(--pink-main);
-      cursor: pointer; transition: all 0.15s; font-weight: bold; font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 4px 0 #ff69b4; position: relative; top: 0;
-    }
-    button:hover { transform: translateY(-3px); box-shadow: 0 7px 0 #ff69b4; }
-    button:active { transform: translateY(4px); box-shadow: 0 0 0 #ff69b4; top: 4px; }
-    
-    .op { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-color: #ff1493; box-shadow: 0 4px 0 #c71585; }
-    .op:hover { background: linear-gradient(135deg, #ff1493, #e6007a); box-shadow: 0 7px 0 #c71585; }
-    .clear { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: white; border-color: #ee5a6f; box-shadow: 0 4px 0 #c92a2a; }
-    .eq { background: linear-gradient(135deg, #51cf66, #37b24d); color: white; grid-column: span 2; border-color: #37b24d; box-shadow: 0 4px 0 #2f9e44; }
-    .eq:hover { background: linear-gradient(135deg, #40c057, #2f9e44); }
+.display {
+background: linear-gradient(135deg, #fff5f8, #ffe4ed);
+color: var(--pink-dark);
+font-size: 2.2rem;
+padding: 20px;
+text-align: right;
+border-radius: 15px;
+border: 3px dashed #ffb6c1;
+min-height: 70px;
+box-shadow: inset 0 2px 8px rgba(255,182,193,0.3);
+margin-bottom: 20px;
+font-family: 'Fredoka One', cursive;
+position: relative;
+overflow: hidden;
+}
+.display::before {
+content: "🎀"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+font-size: 1.5rem; animation: pulse 2s infinite;
+}
 
-    /* RAGE OVERLAYS */
-    .overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center;
-      z-index: 1000; backdrop-filter: blur(4px);
-    }
-    .overlay.active { display: flex; }
-    .popup {
-      background: white; padding: 30px; border-radius: 25px; text-align: center;
-      border: 5px solid var(--pink-main); box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-width: 90%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    
-    .popup h2 { color: var(--pink-dark); font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
-    .popup p { color: #666; margin-bottom: 20px; line-height: 1.5; }
-    .btn-kawaii {
-      background: var(--pink-main); color: white; border: none; padding: 12px 25px;
-      border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 4px 0 #e6007a;
-    }
-    .btn-kawaii:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e6007a; }
+.buttons {
+display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
 
-    .typing-cursor::after { content: "|"; animation: blink 0.8s infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-    @keyframes pulse { 0%,100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.2); } }
-  </style>
+button {
+padding: 18px; font-size: 1.3rem; border: 3px solid #ffb6c1; border-radius: 15px;
+background: linear-gradient(135deg, #fff0f5, #ffe4e1); color: var(--pink-main);
+cursor: pointer; transition: all 0.15s; font-weight: bold; font-family: 'Quicksand', sans-serif;
+box-shadow: 0 4px 0 #ff69b4; position: relative; top: 0;
+}
+button:hover { transform: translateY(-3px); box-shadow: 0 7px 0 #ff69b4; }
+button:active { transform: translateY(4px); box-shadow: 0 0 0 #ff69b4; top: 4px; }
+
+.op { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-color: #ff1493; box-shadow: 0 4px 0 #c71585; }
+.op:hover { background: linear-gradient(135deg, #ff1493, #e6007a); box-shadow: 0 7px 0 #c71585; }
+.clear { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: white; border-color: #ee5a6f; box-shadow: 0 4px 0 #c92a2a; }
+.eq { background: linear-gradient(135deg, #51cf66, #37b24d); color: white; grid-column: span 2; border-color: #37b24d; box-shadow: 0 4px 0 #2f9e44; }
+.eq:hover { background: linear-gradient(135deg, #40c057, #2f9e44); }
+
+/* RAGE OVERLAYS */
+.overlay {
+position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center;
+z-index: 1000; backdrop-filter: blur(4px);
+}
+.overlay.active { display: flex; }
+.popup {
+background: white; padding: 30px; border-radius: 25px; text-align: center;
+border: 5px solid var(--pink-main); box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+max-width: 90%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+.popup h2 { color: var(--pink-dark); font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
+.popup p { color: #666; margin-bottom: 20px; line-height: 1.5; }
+.btn-kawaii {
+background: var(--pink-main); color: white; border: none; padding: 12px 25px;
+border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s;
+box-shadow: 0 4px 0 #e6007a;
+}
+.btn-kawaii:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e6007a; }
+
+.typing-cursor::after { content: "|"; animation: blink 0.8s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes pulse { 0%,100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.2); } }
+
+/* 🎭 MEME OVERLAY - COVERS HALF SCREEN */
+.meme-overlay {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.9);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+backdrop-filter: blur(10px);
+}
+
+.meme-overlay.active {
+display: flex;
+}
+
+.meme-image {
+max-width: 70%;
+max-height: 70vh;
+width: auto;
+height: auto;
+border-radius: 20px;
+box-shadow: 0 20px 80px rgba(255,105,180,0.8);
+animation: memePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+border: 8px solid #ff69b4;
+object-fit: contain;
+}
+
+@keyframes memePop {
+0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ⚡ LIGHTNING EFFECT */
+.lightning {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: white;
+opacity: 0;
+pointer-events: none;
+z-index: 10000;
+}
+
+.lightning.flash {
+animation: lightningFlash 0.3s ease-out;
+}
+
+@keyframes lightningFlash {
+0% { opacity: 0; }
+10% { opacity: 0.9; background: #fff; }
+20% { opacity: 0; background: #ff69b4; }
+30% { opacity: 0.8; background: #00ffff; }
+40% { opacity: 0; }
+50% { opacity: 0.9; background: #ffff00; }
+60% { opacity: 0; }
+70% { opacity: 0.7; background: #ff00ff; }
+100% { opacity: 0; }
+}
+
+.dj-mode {
+animation: djPulse 0.4s infinite;
+}
+
+@keyframes djPulse {
+0%, 100% { transform: scale(1) rotate(-2deg); filter: hue-rotate(0deg) brightness(1); }
+25% { transform: scale(1.05) rotate(2deg); filter: hue-rotate(90deg) brightness(1.2); }
+50% { transform: scale(1) rotate(-2deg); filter: hue-rotate(180deg) brightness(1); }
+75% { transform: scale(1.05) rotate(2deg); filter: hue-rotate(270deg) brightness(1.2); }
+}
+
+/* Screen shake */
+.shake {
+animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+10%, 90% { transform: translate3d(-3px, 0, 0); }
+20%, 80% { transform: translate3d(6px, 0, 0); }
+30%, 50%, 70% { transform: translate3d(-9px, 0, 0); }
+40%, 60% { transform: translate3d(9px, 0, 0); }
+}
+</style>
 </head>
 <body>
 
-  <!-- Background decorations -->
-  <div class="bg-deco" style="top:10%; left:5%;">🎀</div>
-  <div class="bg-deco" style="top:70%; right:8%; animation-delay: 2s;">✨</div>
-  <div class="bg-deco" style="top:40%; left:12%; animation-delay: 4s;">🌸</div>
+<!-- Background decorations -->
+<div class="bg-deco" style="top:10%; left:5%;">🎀</div>
+<div class="bg-deco" style="top:70%; right:8%; animation-delay: 2s;">✨</div>
+<div class="bg-deco" style="top:40%; left:12%; animation-delay: 4s;">🌸</div>
 
-  <div class="calculator">
-    <div class="header">
-      <h1>🐾 Kawaii Calc 🐾</h1>
-      <div class="rage-meter"><div class="rage-fill" id="rageFill"></div></div>
-    </div>
+<div class="calculator">
+<div class="header">
+<h1>🐾 Kawaii Calc 🐾</h1>
+<div class="rage-meter"><div class="rage-fill" id="rageFill"></div></div>
+</div>
 
-    <div class="display" id="display">0</div>
+<div class="display" id="display">0</div>
 
-    <div class="buttons">
-      <button class="clear" onclick="clearDisplay()">C</button>
-      <button onclick="deleteLast()">⌫</button>
-      <button class="op" onclick="append('%')">%</button>
-      <button class="op" onclick="append('/')">÷</button>
+<div class="buttons">
+<button class="clear" onclick="clearDisplay()">C</button>
+<button onclick="deleteLast()">⌫</button>
+<button class="op" onclick="append('%')">%</button>
+<button class="op" onclick="append('/')">÷</button>
 
-      <button onclick="append('7')">7</button>
-      <button onclick="append('8')">8</button>
-      <button onclick="append('9')">9</button>
-      <button class="op" onclick="append('*')">×</button>
+<button onclick="append('7')">7</button>
+<button onclick="append('8')">8</button>
+<button onclick="append('9')">9</button>
+<button class="op" onclick="append('*')">×</button>
 
-      <button onclick="append('4')">4</button>
-      <button onclick="append('5')">5</button>
-      <button onclick="append('6')">6</button>
-      <button class="op" onclick="append('-')">−</button>
+<button onclick="append('4')">4</button>
+<button onclick="append('5')">5</button>
+<button onclick="append('6')">6</button>
+<button class="op" onclick="append('-')">−</button>
 
-      <button onclick="append('1')">1</button>
-      <button onclick="append('2')">2</button>
-      <button onclick="append('3')">3</button>
-      <button class="op" onclick="append('+')">+</button>
+<button onclick="append('1')">1</button>
+<button onclick="append('2')">2</button>
+<button onclick="append('3')">3</button>
+<button class="op" onclick="append('+')">+</button>
 
-      <button onclick="append('0')">0</button>
-      <button onclick="append('.')">.</button>
-      <button class="eq" onclick="calculate()">=</button>
-    </div>
-  </div>
+<button onclick="append('0')">0</button>
+<button onclick="append('.')">.</button>
+<button class="eq" onclick="calculate()">=</button>
+</div>
+</div>
 
-  <!-- Rage Overlays -->
-  <div class="overlay" id="rageOverlay">
-    <div class="popup" id="ragePopup"></div>
-  </div>
+<!-- Rage Overlays -->
+<div class="overlay" id="rageOverlay">
+<div class="popup" id="ragePopup"></div>
+</div>
 
-  <script>
-    // 🎀 SAFE MATH PARSER (replaces unsafe eval)
-    function parseExpression(expr) {
-      // Whitelist: allow only digits, operators, parentheses, and spaces
-      if (!/^[0-9+\-*/.%() ]*$/.test(expr)) {
-        throw new Error('Invalid characters in expression');
-      }
-      if (!expr.trim()) {
-        throw new Error('Empty expression');
-      }
-      // Use Function constructor with strict scope to safely evaluate
-      // This is safer than eval() as it cannot access local scope
-      try {
-        const fn = new Function('return (' + expr + ')');
-        const result = fn();
-        if (!isFinite(result)) {
-          throw new Error('Invalid result');
-        }
-        return result;
-      } catch (e) {
-        throw new Error('Calculation error: ' + e.message);
-      }
-    }
+<!-- Meme Overlay -->
+<div class="meme-overlay" id="memeOverlay">
+<img class="meme-image" id="memeImage" src="" alt="meme">
+</div>
 
-    // 🎀 STATE
-    let expression = '';
-    let rageLevel = parseInt(localStorage.getItem('kawaii_rage')) || 1;
-    let calcCount = parseInt(localStorage.getItem('kawaii_calcs')) || 0;
-    const display = document.getElementById('display');
-    const rageFill = document.getElementById('rageFill');
-    const overlay = document.getElementById('rageOverlay');
-    const popup = document.getElementById('ragePopup');
+<!-- Lightning Effect -->
+<div class="lightning" id="lightning"></div>
 
-    updateRageUI();
+<script>
+// 🎀 SOUND EFFECTS
+const sounds = {
+click: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-click-close-2577.mp3'),
+success: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3'),
+error: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3'),
+rage: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-cartoon-boing-spring-2043.mp3'),
+popup: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-modern-technology-select-3235.mp3'),
 
-    // 🎀 DISPLAY LOGIC
-    function updateDisplay() {
-      display.textContent = expression || '0';
-    }
+// YOUR NEW MEME SOUNDS
+tuco: new Audio('https://www.myinstants.com/media/sounds/tuco-get-out.mp3'),
+faaahhh: new Audio('https://www.myinstants.com/media/sounds/ive-got-this-faaaaaaaaahhhhh.mp3'),
+sadviolin: new Audio('https://www.myinstants.com/media/sounds/sad-violin-the-meme-one.mp3'),
+meowgop: new Audio('https://www.myinstants.com/media/sounds/mka-ladle-meow-gop.mp3')
+};
 
-    function append(value) {
-      // RAGE: Randomly swap or duplicate digits based on rage level
-      const swapChance = 0.05 + (rageLevel * 0.03);
-      if (Math.random() < swapChance && /[0-9]/.test(value)) {
-        const swaps = {'0':'O','1':'l','2':'Z','3':'E','4':'A','5':'S','6':'G','7':'L','8':'B','9':'g'};
-        value = swaps[value] || value;
-        triggerMiniRage('Did you type that? 😇');
-      }
+// Set volumes
+sounds.tuco.volume = 0.9;
+sounds.faaahhh.volume = 1.0;
+sounds.sadviolin.volume = 0.8;
+sounds.meowgop.volume = 1.0;
+Object.values(sounds).forEach(sound => {
+if (sound.volume === undefined) sound.volume = 0.3;
+});
 
-      expression += value;
-      updateDisplay();
-    }
+function playSound(type) {
+if (sounds[type]) {
+sounds[type].currentTime = 0;
+sounds[type].play().catch(() => {});
+}
+}
 
-    function clearDisplay() {
-      expression = '';
-      updateDisplay();
-    }
+// 🎀 MEME CONFIGURATION
+const memes = [
+{
+// 1. Tuco "Get out!" meme
+src: 'https://kommodo.ai/i/OPTAYMmBNZumWxgYLa3G',
+sound: 'tuco',
+duration: 3000,
+effect: 'normal'
+},
+{
+// 2. FAAAHHH meme
+src: 'https://kommodo.ai/i/DuJtLH7k7GCTrRk16Ud5',
+sound: 'faaahhh',
+duration: 3000,
+effect: 'shake'
+},
+{
+// 3. Sad violin meme
+src: 'https://kommodo.ai/i/YRmoUld7Vd1X9Nlwn48Z',
+sound: 'sadviolin',
+duration: 3000,
+effect: 'normal'
+},
+{
+// 4. Meow/gop meme - PLAYS FULL DURATION
+src: 'https://kommodo.ai/i/WFNoNWtTGmV2riprfxX0',
+sound: 'meowgop',
+duration: 0, // 0 = play full sound duration
+effect: 'dj'
+}
+];
 
-    function deleteLast() {
-      // RAGE: Sometimes delete 2 chars at higher rage
-      if (rageLevel > 3 && Math.random() > 0.6) {
-        expression = expression.slice(0, -2);
-        triggerMiniRage('Whoops! Double backspace! 💨');
-      } else {
-        expression = expression.slice(0, -1);
-      }
-      updateDisplay();
-    }
+// 🎀 STATE
+let expression = '';
+let rageLevel = parseInt(localStorage.getItem('kawaii_rage')) || 1;
+let calcCount = parseInt(localStorage.getItem('kawaii_calcs')) || 0;
+const display = document.getElementById('display');
+const rageFill = document.getElementById('rageFill');
+const overlay = document.getElementById('rageOverlay');
+const popup = document.getElementById('ragePopup');
+const memeOverlay = document.getElementById('memeOverlay');
+const memeImage = document.getElementById('memeImage');
+const lightning = document.getElementById('lightning');
 
-    // 🎀 CALCULATE + RAGE MECHANICS
-    function calculate() {
-      if (!expression) return;
-      
-      // Scale delay with rage
-      const baseDelay = 600;
-      const delay = baseDelay + (rageLevel * 400) + Math.random() * 500;
-      
-      display.innerHTML = '<span class="typing-cursor">FAHHH</span>';
-      
-      setTimeout(() => {
-        // RAGE: Random interruption chance
-        if (Math.random() < 0.1 + (rageLevel * 0.05)) {
-          showRagePopup();
-          return;
-        }
+updateRageUI();
 
-        try {
-          // Safe eval check
-          if (/[^0-9+\-*/.%() ]/.test(expression)) throw new Error('Invalid');
-          
-          // RAGE: 10% chance to show fake wrong answer first
-          if (Math.random() < 0.1) {
-            display.textContent = 'Oops! Wrong answer... wait 😿';
-            setTimeout(() => {
-              const res = eval(expression);
-              finishCalc(res);
-            }, 1200);
-          } else {
-            const res = eval(expression);
-            finishCalc(res);
-          }
-        } catch (e) {
-          display.textContent = 'Syntax Error 🌸';
-          setTimeout(() => updateDisplay(), 1500);
-        }
-      }, delay);
-    }
+// 🎀 DISPLAY LOGIC
+function updateDisplay() {
+display.textContent = expression || '0';
+}
 
-    function finishCalc(result) {
-      calcCount++;
-      if (calcCount % 3 === 0) rageLevel = Math.min(rageLevel + 1, 10);
-      
-      localStorage.setItem('kawaii_rage', rageLevel);
-      localStorage.setItem('kawaii_calcs', calcCount);
-      updateRageUI();
+function append(value) {
+playSound('click');
+// RAGE: Randomly swap or duplicate digits based on rage level
+const swapChance = 0.05 + (rageLevel * 0.03);
+if (Math.random() < swapChance && /[0-9]/.test(value)) {
+const swaps = {'0':'O','1':'l','2':'Z','3':'E','4':'A','5':'S','6':'G','7':'L','8':'B','9':'g'};
+value = swaps[value] || value;
+triggerMiniRage('Did you type that? 😇');
+playSound('error');
+}
 
-      display.textContent = `Kawaii! ✨ ${result}`;
-      setTimeout(() => {
-        expression = result.toString();
-        updateDisplay();
-      }, 1500);
-    }
+expression += value;
+updateDisplay();
+}
 
-    // 🎀 RAGE UI & POPUPS
-    function updateRageUI() {
-      rageFill.style.width = `${(rageLevel / 10) * 100}%`;
-      if (rageLevel >= 7) rageFill.style.background = 'linear-gradient(90deg, #ff69b4, #ff1493, #c71585)';
-    }
+function clearDisplay() {
+playSound('click');
+expression = '';
+updateDisplay();
+}
 
-    function triggerMiniRage(msg) {
-      display.textContent = msg;
-      setTimeout(() => updateDisplay(), 800);
-    }
+function deleteLast() {
+playSound('click');
+// RAGE: Sometimes delete 2 chars at higher rage
+if (rageLevel > 3 && Math.random() > 0.6) {
+expression = expression.slice(0, -2);
+triggerMiniRage('Whoops! Double backspace! 💨');
+playSound('rage');
+} else {
+expression = expression.slice(0, -1);
+}
+updateDisplay();
+}
 
-    function showRagePopup() {
-      const messages = [
-        { title: '💖 System Overload!', text: 'Hello Kitty needs a nap! Wait 3 seconds...', delay: 3000 },
-        { title: '🌸 Update Required!', text: 'Downloading kawaii patch 2.4... (fake)', delay: 2500 },
-        { title: '🎀 Battery Low!', text: 'Please shake your device to continue.', delay: 2000 },
-        { title: '😾 Too Many Numbers!', text: 'You broke the math. Try again nicely.', delay: 1500 }
-      ];
-      const pick = messages[Math.floor(Math.random() * messages.length)];
-      
-      popup.innerHTML = `
-        <h2>${pick.title}</h2>
-        <p>${pick.text}</p>
-        <button class="btn-kawaii" onclick="closeRage()">OK, I'll wait 😌</button>
-      `;
-      overlay.classList.add('active');
-      
-      setTimeout(() => {
-        closeRage();
-        const res = parseExpression(expression);
-        finishCalc(res);
-      }, pick.delay);
-    }
+// 🎀 MEME POPUP SYSTEM
+function showRandomMeme() {
+const meme = memes[Math.floor(Math.random() * memes.length)];
 
-    function closeRage() {
-      overlay.classList.remove('active');
-    }
+// Set image
+memeImage.src = meme.src;
 
-    // 🎀 SECRET: Click logo to reset rage
-    document.querySelector('.header h1').addEventListener('click', () => {
-      if (confirm('Reset rage to 1? (Cheater 😏)')) {
-        rageLevel = 1; calcCount = 0;
-        localStorage.setItem('kawaii_rage', 1);
-        localStorage.setItem('kawaii_calcs', 0);
-        updateRageUI();
-        expression = '';
-        updateDisplay();
-      }
-    });
-  </script>
+// Clear previous effects
+memeImage.classList.remove('shake', 'dj-mode');
+
+// Add special effects based on meme type
+if (meme.effect === 'shake') {
+memeImage.classList.add('shake');
+} else if (meme.effect === 'dj') {
+memeImage.classList.add('dj-mode');
+triggerLightning();
+}
+
+// Show overlay (centered, covers half screen)
+memeOverlay.classList.add('active');
+
+// Play sound
+playSound(meme.sound);
+
+// Calculate duration - if duration is 0, use full sound length
+let displayDuration;
+if (meme.duration === 0) {
+// Wait for sound to load, then use its duration
+if (sounds[meme.sound].duration) {
+displayDuration = sounds[meme.sound].duration * 1000;
+} else {
+// Fallback: estimate 4 seconds if duration not loaded yet
+displayDuration = 4000;
+}
+} else {
+displayDuration = meme.duration;
+}
+
+// Hide after duration
+setTimeout(() => {
+memeOverlay.classList.remove('active');
+memeImage.classList.remove('shake', 'dj-mode');
+}, displayDuration);
+}
+
+function triggerLightning() {
+let flashes = 0;
+const flashInterval = setInterval(() => {
+lightning.classList.remove('flash');
+void lightning.offsetWidth; // Trigger reflow
+lightning.classList.add('flash');
+flashes++;
+if (flashes > 10) clearInterval(flashInterval);
+}, 300);
+}
+
+// 🎀 CALCULATE + RAGE MECHANICS
+function calculate() {
+if (!expression) return;
+
+// 40% chance to show meme when clicking =
+if (Math.random() < 0.4) {
+setTimeout(() => showRandomMeme(), 300);
+}
+
+playSound('popup');
+
+// Scale delay with rage
+const baseDelay = 600;
+const delay = baseDelay + (rageLevel * 400) + Math.random() * 500;
+
+display.innerHTML = '<span class="typing-cursor">Hello Kitty is calculating</span>';
+
+setTimeout(() => {
+// RAGE: Random interruption chance
+if (Math.random() < 0.1 + (rageLevel * 0.05)) {
+playSound('rage');
+showRagePopup();
+return;
+}
+
+try {
+// Safe eval check
+if (/[^0-9+\-*/.%() ]/.test(expression)) throw new Error('Invalid');
+
+// RAGE: 10% chance to show fake wrong answer first
+if (Math.random() < 0.1) {
+playSound('error');
+playSound('faaahhh');
+display.textContent = 'Oops! Wrong answer... wait 😿';
+setTimeout(() => {
+const res = eval(expression);
+playSound('success');
+finishCalc(res);
+}, 1200);
+} else {
+const res = eval(expression);
+playSound('success');
+finishCalc(res);
+}
+} catch (e) {
+playSound('error');
+display.textContent = 'Syntax Error 🌸';
+setTimeout(() => updateDisplay(), 1500);
+}
+}, delay);
+}
+
+function finishCalc(result) {
+calcCount++;
+if (calcCount % 3 === 0) rageLevel = Math.min(rageLevel + 1, 10);
+
+localStorage.setItem('kawaii_rage', rageLevel);
+localStorage.setItem('kawaii_calcs', calcCount);
+updateRageUI();
+
+display.textContent = `Kawaii! ✨ ${result}`;
+setTimeout(() => {
+expression = result.toString();
+updateDisplay();
+}, 1500);
+}
+
+// 🎀 RAGE UI & POPUPS
+function updateRageUI() {
+rageFill.style.width = `${(rageLevel / 10) * 100}%`;
+if (rageLevel >= 7) rageFill.style.background = 'linear-gradient(90deg, #ff69b4, #ff1493, #c71585)';
+}
+
+function triggerMiniRage(msg) {
+display.textContent = msg;
+setTimeout(() => updateDisplay(), 800);
+}
+
+function showRagePopup() {
+const messages = [
+{ title: '💖 System Overload!', text: 'Hello Kitty needs a nap! Wait 3 seconds...', delay: 3000 },
+{ title: '🌸 Update Required!', text: 'Downloading kawaii patch 2.4... (fake)', delay: 2500 },
+{ title: '🎀 Battery Low!', text: 'Please shake your device to continue.', delay: 2000 },
+{ title: '😾 Too Many Numbers!', text: 'You broke the math. Try again nicely.', delay: 1500 }
+];
+const pick = messages[Math.floor(Math.random() * messages.length)];
+
+popup.innerHTML = `
+<h2>${pick.title}</h2>
+<p>${pick.text}</p>
+<button class="btn-kawaii" onclick="closeRage()">OK, I'll wait 😌</button>
+`;
+overlay.classList.add('active');
+
+setTimeout(() => {
+closeRage();
+const res = eval(expression);
+playSound('success');
+finishCalc(res);
+}, pick.delay);
+}
+
+function closeRage() {
+playSound('click');
+overlay.classList.remove('active');
+}
+
+// 🎀 SECRET: Click logo to reset rage
+document.querySelector('.header h1').addEventListener('click', () => {
+if (confirm('Reset rage to 1? (Cheater 😏)')) {
+rageLevel = 1; calcCount = 0;
+localStorage.setItem('kawaii_rage', 1);
+localStorage.setItem('kawaii_calcs', 0);
+updateRageUI();
+expression = '';
+updateDisplay();
+playSound('success');
+}
+});
+</script>
 </body>
 </html>
