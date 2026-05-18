@@ -19,9 +19,10 @@ display: flex; justify-content: center; align-items: center; overflow: hidden; p
 position: fixed; font-size: 2rem; opacity: 0.2; animation: float 8s infinite ease-in-out;
 }
 @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+
 .calculator {
 width: 360px; background: rgba(255,255,255,0.95); border-radius: 25px; padding: 25px;
-box-shadow: 0 15px 40px rgba(255,105,180,0.4), inset 0 0 0 4px #ff69b4; position: relative; z-index: 10;
+box-shadow: 0 15px 40px rgba(255,105,180,0.4), inset 0 0 0 4px #ff69b4; position: relative; z-index: 1000;
 }
 .header { text-align: center; margin-bottom: 15px; position: relative; }
 .header h1 {
@@ -36,9 +37,7 @@ background: linear-gradient(135deg, #fff5f8, #ffe4ed); color: var(--pink-dark); 
 text-align: right; border-radius: 15px; border: 3px dashed #ffb6c1; min-height: 70px;
 box-shadow: inset 0 2px 8px rgba(255,182,193,0.3); margin-bottom: 20px; font-family: 'Fredoka One', cursive; position: relative; overflow: hidden;
 }
-.display::before {
-content: ""; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; animation: pulse 2s infinite;
-}
+.display::before { content: "🎀"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; animation: pulse 2s infinite; }
 .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 button {
 padding: 18px; font-size: 1.3rem; border: 3px solid #ffb6c1; border-radius: 15px;
@@ -69,46 +68,24 @@ background: var(--pink-main); color: white; border: none; padding: 12px 25px; bo
 font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 0 #e6007a;
 }
 .btn-kawaii:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e6007a; }
-.typing-cursor::after { content: "|"; animation: blink 0.8s infinite; }
-@keyframes blink { 50% { opacity: 0; } }
 @keyframes pulse { 0%,100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.2); } }
 
-/* 🎭 MEME OVERLAY */
-.meme-overlay {
-position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(10px);
+/*  FLOATING BALLOON MEMES */
+.meme-balloon {
+position: fixed;
+max-width: 130px; max-height: 130px; width: auto; height: auto;
+border-radius: 50%; object-fit: cover;
+box-shadow: 0 10px 30px rgba(255,105,180,0.4); border: 3px solid #ff69b4;
+animation: balloonFloat 5s ease-in-out infinite;
+pointer-events: none; z-index: 500; opacity: 0.85;
+transition: transform 0.3s, opacity 0.5s;
 }
-.meme-overlay.active { display: flex; }
-.meme-image {
-max-width: 70%; max-height: 70vh; width: auto; height: auto; border-radius: 20px;
-box-shadow: 0 20px 80px rgba(255,105,180,0.8); animation: memePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-border: 8px solid #ff69b4; object-fit: contain;
+@keyframes balloonFloat {
+0%, 100% { transform: translateY(0) rotate(-4deg); }
+50% { transform: translateY(-15px) rotate(4deg); }
 }
-@keyframes memePop { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
-
-/* ⚡ LIGHTNING */
-.lightning {
-position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white;
-opacity: 0; pointer-events: none; z-index: 10000;
-}
-.lightning.flash { animation: lightningFlash 0.3s ease-out; }
-@keyframes lightningFlash {
-0% { opacity: 0; } 10% { opacity: 0.9; background: #fff; } 20% { opacity: 0; background: #ff69b4; }
-30% { opacity: 0.8; background: #00ffff; } 40% { opacity: 0; } 50% { opacity: 0.9; background: #ffff00; }
-60% { opacity: 0; } 70% { opacity: 0.7; background: #ff00ff; } 100% { opacity: 0; }
-}
-.dj-mode { animation: djPulse 0.4s infinite; }
-@keyframes djPulse {
-0%, 100% { transform: scale(1) rotate(-2deg); filter: hue-rotate(0deg) brightness(1); }
-25% { transform: scale(1.05) rotate(2deg); filter: hue-rotate(90deg) brightness(1.2); }
-50% { transform: scale(1) rotate(-2deg); filter: hue-rotate(180deg) brightness(1); }
-75% { transform: scale(1.05) rotate(2deg); filter: hue-rotate(270deg) brightness(1.2); }
-}
-.shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-@keyframes shake {
-10%, 90% { transform: translate3d(-3px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); }
-30%, 50%, 70% { transform: translate3d(-9px, 0, 0); } 40%, 60% { transform: translate3d(9px, 0, 0); }
-}
+.meme-balloon.fade-in { animation: balloonFadeIn 0.6s ease-out, balloonFloat 5s ease-in-out 0.6s infinite; }
+@keyframes balloonFadeIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 0.85; transform: scale(1); } }
 </style>
 </head>
 <body>
@@ -118,7 +95,7 @@ opacity: 0; pointer-events: none; z-index: 10000;
 
 <div class="calculator">
 <div class="header">
-<h1>🐾 Kawaii Calc 🐾</h1>
+<h1>🐾 Kawaii Calc </h1>
 <div class="rage-meter"><div class="rage-fill" id="rageFill"></div></div>
 </div>
 <div class="display" id="display">0</div>
@@ -146,11 +123,9 @@ opacity: 0; pointer-events: none; z-index: 10000;
 </div>
 
 <div class="overlay" id="rageOverlay"><div class="popup" id="ragePopup"></div></div>
-<div class="meme-overlay" id="memeOverlay"><img class="meme-image" id="memeImage" src="" alt="meme"></div>
-<div class="lightning" id="lightning"></div>
 
 <script>
-// 🎀 SOUND EFFECTS
+//  SOUND EFFECTS
 // ⚠️ If sadviolin or tuco don't play, right-click their play buttons on MyInstants → "Copy link address" → replace URLs below
 const sounds = {
   click: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-click-close-2577.mp3'),
@@ -174,7 +149,7 @@ function playSound(type) {
 const memeConfig = {
   faaahhh: { src: 'meme3.jpeg', sound: 'faaahhh', duration: 3000, effect: 'shake' },
   sadviolin: { src: 'meme2.jpeg', sound: 'sadviolin', duration: 3000, effect: 'normal' },
-  meowgop: { src: 'meme1.jpeg', sound: 'meowgop', duration: 0, effect: 'dj' },
+  meowgop: { src: 'meme1.jpeg', sound: 'meowgop', duration: 0, effect: 'bounce' },
   tuco: { src: 'meme4.jpeg', sound: 'tuco', duration: 3000, effect: 'normal' }
 };
 
@@ -208,21 +183,34 @@ function shuffleArray(arr) {
   } return arr;
 }
 
-function showMeme(expr, result) {
+function showFloatingMeme(expr, result) {
   const meme = getNextMemeForCalc(expr, result);
-  memeImage.src = meme.src; memeImage.classList.remove('shake', 'dj-mode');
-  if (meme.effect === 'shake') memeImage.classList.add('shake');
-  else if (meme.effect === 'dj') { memeImage.classList.add('dj-mode'); triggerLightning(); }
-  memeOverlay.classList.add('active'); playSound(meme.sound);
+  const img = document.createElement('img');
+  img.src = meme.src;
+  img.className = 'meme-balloon fade-in';
+  
+  // Random position away from center
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let left = Math.random() * (vw - 150);
+  let top = Math.random() * (vh - 150);
+  
+  // Keep away from calculator center
+  if (left > vw/2 - 200 && left < vw/2 + 100) left = Math.random() < 0.5 ? 30 : vw - 160;
+  if (top > vh/2 - 180 && top < vh/2 + 100) top = Math.random() < 0.5 ? 30 : vh - 160;
+  
+  img.style.left = left + 'px';
+  img.style.top = top + 'px';
+  img.style.animationDelay = Math.random() * 1.5 + 's';
+  
+  document.body.appendChild(img);
+  playSound(meme.sound);
+  
   const duration = meme.duration === 0 ? (sounds[meme.sound].duration * 1000 || 4000) : meme.duration;
-  setTimeout(() => { memeOverlay.classList.remove('active'); memeImage.classList.remove('shake', 'dj-mode'); }, duration);
-}
-
-function triggerLightning() {
-  let flashes = 0; const interval = setInterval(() => {
-    lightning.classList.remove('flash'); void lightning.offsetWidth; lightning.classList.add('flash');
-    if (++flashes > 10) clearInterval(interval);
-  }, 300);
+  setTimeout(() => {
+    img.style.opacity = '0';
+    setTimeout(() => img.remove(), 600);
+  }, duration);
 }
 
 //  STATE
@@ -233,51 +221,50 @@ const display = document.getElementById('display');
 const rageFill = document.getElementById('rageFill');
 const overlay = document.getElementById('rageOverlay');
 const popup = document.getElementById('ragePopup');
-const memeOverlay = document.getElementById('memeOverlay');
-const memeImage = document.getElementById('memeImage');
-const lightning = document.getElementById('lightning');
 updateRageUI();
 
 function updateDisplay() { display.textContent = expression || '0'; }
 function append(value) {
   playSound('click');
-  if (Math.random() < 0.05 + rageLevel * 0.03 && /[0-9]/.test(value)) {
-    const swaps = {'0':'O','1':'l','2':'Z','3':'E','4':'A','5':'S','6':'G','7':'L','8':'B','9':'g'};
-    value = swaps[value] || value; triggerMiniRage('Did you type that? '); playSound('error');
-  }
   expression += value; updateDisplay();
 }
 function clearDisplay() { playSound('click'); expression = ''; updateDisplay(); }
 function deleteLast() {
   playSound('click');
-  if (rageLevel > 3 && Math.random() > 0.6) {
-    expression = expression.slice(0, -2); triggerMiniRage('Whoops! Double backspace! 💨'); playSound('rage');
-  } else { expression = expression.slice(0, -1); }
+  expression = expression.slice(0, -1);
   updateDisplay();
 }
 
 function calculate() {
   if (!expression) return;
   playSound('popup');
-  const delay = 600 + rageLevel * 400 + Math.random() * 500;
-  display.innerHTML = '<span class="typing-cursor">Hello Kitty is calculating</span>';
   
+  // Direct calculation, no waiting text
   setTimeout(() => {
-    if (Math.random() < 0.1 + rageLevel * 0.05) { playSound('rage'); showRagePopup(); return; }
+    if (Math.random() < 0.08 + rageLevel * 0.04) {
+      playSound('rage'); showRagePopup(); return;
+    }
     try {
       if (/[^0-9+\-*/.%() ]/.test(expression)) throw new Error('Invalid');
       const result = eval(expression);
-      showMeme(expression, result);
-      display.textContent = `Kawaii! ✨ ${result}`;
-      setTimeout(() => { expression = result.toString(); updateDisplay(); }, 1500);
+      
+      // Show floating balloon immediately
+      showFloatingMeme(expression, result);
+      
+      display.textContent = `✨ ${result}`;
+      setTimeout(() => { expression = result.toString(); updateDisplay(); }, 2000);
+      
       calcCount++;
       if (calcCount % 3 === 0) rageLevel = Math.min(rageLevel + 1, 10);
-      localStorage.setItem('kawaii_rage', rageLevel); localStorage.setItem('kawaii_calcs', calcCount);
+      localStorage.setItem('kawaii_rage', rageLevel);
+      localStorage.setItem('kawaii_calcs', calcCount);
       updateRageUI();
     } catch (e) {
-      playSound('error'); display.textContent = 'Syntax Error 🌸'; setTimeout(() => updateDisplay(), 1500);
+      playSound('error');
+      display.textContent = 'Error 🌸';
+      setTimeout(() => updateDisplay(), 1500);
     }
-  }, delay);
+  }, 200);
 }
 
 function updateRageUI() {
