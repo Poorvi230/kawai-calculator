@@ -7,126 +7,116 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
 :root {
---pink-light: #ffe4ed; --pink-main: #ff69b4; --pink-dark: #ff1493; --bow: #ffd700;
---bg: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 50%, #ffd6e7 100%);
+--c1: #FFB6C1; --c2: #E6E6FA; --c3: #98FB98; --c4: #FFE4B5; --c5: #87CEEB; --c6: #FFFACD;
+--bg-grad: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 30%, #e8f5e9 60%, #fff3e0 100%);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 body {
-font-family: 'Quicksand', sans-serif; background: var(--bg); min-height: 100vh;
-display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative;
+font-family: 'Quicksand', sans-serif; background: var(--bg-grad); background-size: 400% 400%;
+animation: bgShift 12s ease infinite; min-height: 100vh; display: flex; justify-content: center;
+align-items: center; overflow: hidden; position: relative;
 }
-.bg-deco {
-position: fixed; font-size: 2rem; opacity: 0.2; animation: float 8s infinite ease-in-out;
-}
-@keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+@keyframes bgShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
 
 .calculator {
-width: 360px; background: rgba(255,255,255,0.95); border-radius: 25px; padding: 25px;
-box-shadow: 0 15px 40px rgba(255,105,180,0.4), inset 0 0 0 4px #ff69b4; position: relative; z-index: 1000;
+width: 370px; background: rgba(255,255,255,0.85); border-radius: 30px; padding: 25px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.15), 0 0 0 4px var(--c1); backdrop-filter: blur(10px);
+position: relative; z-index: 100;
 }
-.header { text-align: center; margin-bottom: 15px; position: relative; }
+.header { text-align: center; margin-bottom: 15px; }
 .header h1 {
-font-family: 'Fredoka One', cursive; color: var(--pink-dark); font-size: 1.8rem; text-shadow: 2px 2px 0 #ffb6c1;
+font-family: 'Fredoka One', cursive; background: linear-gradient(90deg, #ff6b9d, #c44dff, #4ecdc4, #ffe66d);
+-webkit-background-clip: text; color: transparent; font-size: 1.9rem;
 }
-.rage-meter { height: 8px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-.rage-fill {
-height: 100%; width: 0%; background: linear-gradient(90deg, #51cf66, #ff69b4, #ff1493); transition: width 0.5s ease;
-}
+.rage-meter { height: 8px; background: #eee; border-radius: 10px; margin-top: 8px; overflow: hidden; }
+.rage-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4ecdc4, #c44dff, #ff6b9d); transition: width 0.5s; }
+
 .display {
-background: linear-gradient(135deg, #fff5f8, #ffe4ed); color: var(--pink-dark); font-size: 2.2rem; padding: 20px;
-text-align: right; border-radius: 15px; border: 3px dashed #ffb6c1; min-height: 70px;
-box-shadow: inset 0 2px 8px rgba(255,182,193,0.3); margin-bottom: 20px; font-family: 'Fredoka One', cursive; position: relative; overflow: hidden;
+background: linear-gradient(135deg, #fff, #f8f9fa); color: #333; font-size: 2.4rem; padding: 20px;
+text-align: right; border-radius: 18px; border: 3px dashed #ddd; min-height: 75px;
+box-shadow: inset 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; font-family: 'Fredoka One', cursive;
+position: relative; overflow: hidden;
 }
-.display::before { content: "🎀"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; animation: pulse 2s infinite; }
-.buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.display::before { content: "✨"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; }
+
+.buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 button {
-padding: 18px; font-size: 1.3rem; border: 3px solid #ffb6c1; border-radius: 15px;
-background: linear-gradient(135deg, #fff0f5, #ffe4e1); color: var(--pink-main); cursor: pointer;
-transition: all 0.15s; font-weight: bold; font-family: 'Quicksand', sans-serif; box-shadow: 0 4px 0 #ff69b4; position: relative; top: 0;
+padding: 18px; font-size: 1.3rem; border: none; border-radius: 16px; cursor: pointer;
+transition: all 0.15s; font-weight: bold; font-family: 'Quicksand', sans-serif;
+box-shadow: 0 4px 0 rgba(0,0,0,0.1); position: relative; top: 0;
 }
-button:hover { transform: translateY(-3px); box-shadow: 0 7px 0 #ff69b4; }
-button:active { transform: translateY(4px); box-shadow: 0 0 0 #ff69b4; top: 4px; }
-.op { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-color: #ff1493; box-shadow: 0 4px 0 #c71585; }
-.op:hover { background: linear-gradient(135deg, #ff1493, #e6007a); box-shadow: 0 7px 0 #c71585; }
-.clear { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: white; border-color: #ee5a6f; box-shadow: 0 4px 0 #c92a2a; }
-.eq { background: linear-gradient(135deg, #51cf66, #37b24d); color: white; grid-column: span 2; border-color: #37b24d; box-shadow: 0 4px 0 #2f9e44; }
-.eq:hover { background: linear-gradient(135deg, #40c057, #2f9e44); }
+button:hover { transform: translateY(-3px); box-shadow: 0 7px 0 rgba(0,0,0,0.15); }
+button:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0.1); top: 4px; }
+
+/* Color-coded buttons */
+.num { background: var(--c2); color: #555; }
+.op { background: var(--c1); color: white; }
+.clear { background: var(--c3); color: #333; }
+.eq { background: linear-gradient(135deg, #c44dff, #ff6b9d); color: white; grid-column: span 2; }
+.dec { background: var(--c6); color: #333; }
+
 .overlay {
-position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px);
+position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75);
+display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(8px);
 }
 .overlay.active { display: flex; }
 .popup {
-background: white; padding: 30px; border-radius: 25px; text-align: center; border: 5px solid var(--pink-main);
+background: white; padding: 30px; border-radius: 25px; text-align: center; border: 4px solid var(--c1);
 box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 90%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-.popup h2 { color: var(--pink-dark); font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
+.popup h2 { color: #c44dff; font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
 .popup p { color: #666; margin-bottom: 20px; line-height: 1.5; }
 .btn-kawaii {
-background: var(--pink-main); color: white; border: none; padding: 12px 25px; border-radius: 20px;
-font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 0 #e6007a;
+background: linear-gradient(135deg, #c44dff, #ff6b9d); color: white; border: none; padding: 12px 25px;
+border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 0 #a030d0;
 }
-.btn-kawaii:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e6007a; }
-@keyframes pulse { 0%,100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.2); } }
+.btn-kawaii:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #a030d0; }
 
-/*  FLOATING BALLOON MEMES */
-.meme-balloon {
-position: fixed;
-max-width: 130px; max-height: 130px; width: auto; height: auto;
-border-radius: 50%; object-fit: cover;
-box-shadow: 0 10px 30px rgba(255,105,180,0.4); border: 3px solid #ff69b4;
-animation: balloonFloat 5s ease-in-out infinite;
-pointer-events: none; z-index: 500; opacity: 0.85;
-transition: transform 0.3s, opacity 0.5s;
+/*  FULL-SCREEN MEME OVERLAY */
+.meme-overlay {
+position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+display: none; justify-content: center; align-items: center; z-index: 10000;
 }
-@keyframes balloonFloat {
-0%, 100% { transform: translateY(0) rotate(-4deg); }
-50% { transform: translateY(-15px) rotate(4deg); }
+.meme-overlay.active { display: flex; }
+.meme-overlay img {
+max-width: 75%; max-height: 75vh; border-radius: 20px; border: 6px solid white;
+box-shadow: 0 20px 60px rgba(0,0,0,0.4); animation: memePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.meme-balloon.fade-in { animation: balloonFadeIn 0.6s ease-out, balloonFloat 5s ease-in-out 0.6s infinite; }
-@keyframes balloonFadeIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 0.85; transform: scale(1); } }
+@keyframes memePop { 0% { transform: scale(0.5) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+
+/*  FLOATING BACKGROUND MEMES */
+.bg-meme {
+position: fixed; max-width: 110px; max-height: 110px; border-radius: 15px; object-fit: cover;
+border: 2px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.15); opacity: 0.7;
+pointer-events: none; z-index: 1; animation: floatAround 8s ease-in-out infinite;
+}
+@keyframes floatAround { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
 </style>
 </head>
 <body>
-<div class="bg-deco" style="top:10%; left:5%;">🎀</div>
-<div class="bg-deco" style="top:70%; right:8%; animation-delay: 2s;">✨</div>
-<div class="bg-deco" style="top:40%; left:12%; animation-delay: 4s;">🌸</div>
-
 <div class="calculator">
-<div class="header">
-<h1>🐾 Kawaii Calc </h1>
-<div class="rage-meter"><div class="rage-fill" id="rageFill"></div></div>
-</div>
+<div class="header"><h1>🌈 Kawaii Calc </h1><div class="rage-meter"><div class="rage-fill" id="rageFill"></div></div></div>
 <div class="display" id="display">0</div>
 <div class="buttons">
-<button class="clear" onclick="clearDisplay()">C</button>
-<button onclick="deleteLast()">⌫</button>
-<button class="op" onclick="append('%')">%</button>
-<button class="op" onclick="append('/')">÷</button>
-<button onclick="append('7')">7</button>
-<button onclick="append('8')">8</button>
-<button onclick="append('9')">9</button>
-<button class="op" onclick="append('*')">×</button>
-<button onclick="append('4')">4</button>
-<button onclick="append('5')">5</button>
-<button onclick="append('6')">6</button>
-<button class="op" onclick="append('-')">−</button>
-<button onclick="append('1')">1</button>
-<button onclick="append('2')">2</button>
-<button onclick="append('3')">3</button>
-<button class="op" onclick="append('+')">+</button>
-<button onclick="append('0')">0</button>
-<button onclick="append('.')">.</button>
+<button class="clear" onclick="clearDisplay()">C</button><button class="num" onclick="deleteLast()">⌫</button>
+<button class="op" onclick="append('%')">%</button><button class="op" onclick="append('/')">÷</button>
+<button class="num" onclick="append('7')">7</button><button class="num" onclick="append('8')">8</button>
+<button class="num" onclick="append('9')">9</button><button class="op" onclick="append('*')">×</button>
+<button class="num" onclick="append('4')">4</button><button class="num" onclick="append('5')">5</button>
+<button class="num" onclick="append('6')">6</button><button class="op" onclick="append('-')">−</button>
+<button class="num" onclick="append('1')">1</button><button class="num" onclick="append('2')">2</button>
+<button class="num" onclick="append('3')">3</button><button class="op" onclick="append('+')">+</button>
+<button class="num" onclick="append('0')">0</button><button class="dec" onclick="append('.')">.</button>
 <button class="eq" onclick="calculate()">=</button>
 </div>
 </div>
 
 <div class="overlay" id="rageOverlay"><div class="popup" id="ragePopup"></div></div>
+<div class="meme-overlay" id="memeOverlay"><img id="memeImg" src="" alt="meme"></div>
 
 <script>
-//  SOUND EFFECTS
-// ⚠️ If sadviolin or tuco don't play, right-click their play buttons on MyInstants → "Copy link address" → replace URLs below
+// 🎀 SOUNDS
 const sounds = {
   click: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-click-close-2577.mp3'),
   success: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3'),
@@ -138,80 +128,61 @@ const sounds = {
   sadviolin: new Audio('https://www.myinstants.com/media/sounds/sad-violin-the-meme-one.mp3'),
   meowgop: new Audio('https://www.myinstants.com/media/sounds/mka-ladle-meow-gop.mp3')
 };
-sounds.tuco.volume = 0.9; sounds.faaahhh.volume = 1.0; sounds.sadviolin.volume = 0.8; sounds.meowgop.volume = 1.0;
-Object.values(sounds).forEach(s => { if (s.volume === undefined) s.volume = 0.3; });
+Object.keys(sounds).forEach(k => { sounds[k].volume = k==='faaahhh'||k==='meowgop'?1:k==='tuco'?0.9:k==='sadviolin'?0.8:0.3; });
+function playSound(t) { if(sounds[t]) { sounds[t].currentTime=0; sounds[t].play().catch(()=>{}); } }
 
-function playSound(type) {
-  if (sounds[type]) { sounds[type].currentTime = 0; sounds[type].play().catch(() => console.warn(`Sound "${type}" failed`)); }
-}
-
-// 🎀 MEME CONFIG
-const memeConfig = {
-  faaahhh: { src: 'meme3.jpeg', sound: 'faaahhh', duration: 3000, effect: 'shake' },
-  sadviolin: { src: 'meme2.jpeg', sound: 'sadviolin', duration: 3000, effect: 'normal' },
-  meowgop: { src: 'meme1.jpeg', sound: 'meowgop', duration: 0, effect: 'bounce' },
-  tuco: { src: 'meme4.jpeg', sound: 'tuco', duration: 3000, effect: 'normal' }
+// 🎀 MEME CONFIG & QUEUE
+const memes = {
+  faaahhh: { src: 'meme3.jpeg', sound: 'faaahhh', dur: 3000 },
+  sadviolin: { src: 'meme2.jpeg', sound: 'sadviolin', dur: 3000 },
+  meowgop: { src: 'meme1.jpeg', sound: 'meowgop', dur: 0 },
+  tuco: { src: 'meme4.jpeg', sound: 'tuco', dur: 3000 }
 };
+let queue = ['faaahhh','sadviolin','meowgop','tuco'], shown = new Set();
 
-// 🎀 SMART QUEUE SYSTEM
-let memeQueue = ['faaahhh', 'sadviolin', 'meowgop', 'tuco'];
-let shownInCycle = new Set();
-
-function getCalcType(expr, result) {
-  const numStr = Math.abs(result).toString().split('.')[0];
-  const len = numStr.length;
-  if (len >= 4 && len <= 6) return 'faaahhh';
-  if (len >= 2 && len <= 3) return 'meowgop';
-  if ([1,4,9,16,25,36,49].includes(result) || /^\d\s*-\s*\d$/.test(expr.trim())) return 'sadviolin';
+function getCalcType(res) {
+  const len = Math.abs(res).toString().split('.')[0].length;
+  if(len>=4 && len<=6) return 'faaahhh';
+  if(len>=2 && len<=3) return 'meowgop';
+  if([1,4,9,16,25,36,49].includes(res)) return 'sadviolin';
   return 'tuco';
 }
-
-function getNextMemeForCalc(expr, result) {
-  const preferred = getCalcType(expr, result);
-  if (!shownInCycle.has(preferred) && memeQueue.includes(preferred)) {
-    shownInCycle.add(preferred); return memeConfig[preferred];
-  }
-  const next = memeQueue.find(m => !shownInCycle.has(m));
-  if (next) { shownInCycle.add(next); return memeConfig[next]; }
-  shownInCycle.clear(); memeQueue = shuffleArray([...memeQueue]);
-  const first = memeQueue[0]; shownInCycle.add(first); return memeConfig[first];
+function getNextMeme(res) {
+  const pref = getCalcType(res);
+  if(!shown.has(pref) && queue.includes(pref)) { shown.add(pref); return memes[pref]; }
+  const next = queue.find(m=>!shown.has(m));
+  if(next) { shown.add(next); return memes[next]; }
+  shown.clear(); queue=queue.sort(()=>Math.random()-0.5);
+  const f=queue[0]; shown.add(f); return memes[f];
 }
 
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]];
-  } return arr;
-}
-
-function showFloatingMeme(expr, result) {
-  const meme = getNextMemeForCalc(expr, result);
-  const img = document.createElement('img');
-  img.src = meme.src;
-  img.className = 'meme-balloon fade-in';
-  
-  // Random position away from center
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  let left = Math.random() * (vw - 150);
-  let top = Math.random() * (vh - 150);
-  
-  // Keep away from calculator center
-  if (left > vw/2 - 200 && left < vw/2 + 100) left = Math.random() < 0.5 ? 30 : vw - 160;
-  if (top > vh/2 - 180 && top < vh/2 + 100) top = Math.random() < 0.5 ? 30 : vh - 160;
-  
-  img.style.left = left + 'px';
-  img.style.top = top + 'px';
-  img.style.animationDelay = Math.random() * 1.5 + 's';
-  
-  document.body.appendChild(img);
-  playSound(meme.sound);
-  
-  const duration = meme.duration === 0 ? (sounds[meme.sound].duration * 1000 || 4000) : meme.duration;
+// 🎀 FULL-SCREEN MEME (BEFORE ANSWER)
+function showMainMeme(expr, res) {
+  const m = getNextMeme(res);
+  const ov = document.getElementById('memeOverlay'), img = document.getElementById('memeImg');
+  img.src = m.src; ov.classList.add('active'); playSound(m.sound);
+  const dur = m.dur===0 ? (sounds[m.sound].duration*1000||4000) : m.dur;
   setTimeout(() => {
-    img.style.opacity = '0';
-    setTimeout(() => img.remove(), 600);
-  }, duration);
+    ov.classList.remove('active');
+    display.textContent = `✨ ${res}`;
+    setTimeout(() => { expression=res.toString(); updateDisplay(); }, 2000);
+  }, dur);
 }
+
+//  FLOATING BACKGROUND MEMES (IDLE)
+function spawnBgMeme() {
+  if(document.getElementById('memeOverlay').classList.contains('active')) return;
+  const srcs = ['meme1.jpeg','meme2.jpeg','meme3.jpeg','meme4.jpeg'];
+  const img = document.createElement('img');
+  img.src = srcs[Math.floor(Math.random()*4)];
+  img.className = 'bg-meme';
+  img.style.left = Math.random()*90 + 'vw';
+  img.style.top = Math.random()*90 + 'vh';
+  img.style.animationDelay = Math.random()*3 + 's';
+  document.body.appendChild(img);
+  setTimeout(() => { img.style.opacity='0'; setTimeout(()=>img.remove(), 600); }, 5000);
+}
+setInterval(spawnBgMeme, 4000);
 
 //  STATE
 let expression = '';
@@ -224,74 +195,49 @@ const popup = document.getElementById('ragePopup');
 updateRageUI();
 
 function updateDisplay() { display.textContent = expression || '0'; }
-function append(value) {
-  playSound('click');
-  expression += value; updateDisplay();
-}
-function clearDisplay() { playSound('click'); expression = ''; updateDisplay(); }
-function deleteLast() {
-  playSound('click');
-  expression = expression.slice(0, -1);
-  updateDisplay();
-}
+function append(v) { playSound('click'); expression+=v; updateDisplay(); }
+function clearDisplay() { playSound('click'); expression=''; updateDisplay(); }
+function deleteLast() { playSound('click'); expression=expression.slice(0,-1); updateDisplay(); }
 
 function calculate() {
-  if (!expression) return;
+  if(!expression) return;
   playSound('popup');
-  
-  // Direct calculation, no waiting text
-  setTimeout(() => {
-    if (Math.random() < 0.08 + rageLevel * 0.04) {
-      playSound('rage'); showRagePopup(); return;
-    }
-    try {
-      if (/[^0-9+\-*/.%() ]/.test(expression)) throw new Error('Invalid');
-      const result = eval(expression);
-      
-      // Show floating balloon immediately
-      showFloatingMeme(expression, result);
-      
-      display.textContent = `✨ ${result}`;
-      setTimeout(() => { expression = result.toString(); updateDisplay(); }, 2000);
-      
-      calcCount++;
-      if (calcCount % 3 === 0) rageLevel = Math.min(rageLevel + 1, 10);
-      localStorage.setItem('kawaii_rage', rageLevel);
-      localStorage.setItem('kawaii_calcs', calcCount);
-      updateRageUI();
-    } catch (e) {
-      playSound('error');
-      display.textContent = 'Error 🌸';
-      setTimeout(() => updateDisplay(), 1500);
-    }
-  }, 200);
+  if(Math.random()<0.08+rageLevel*0.04) { playSound('rage'); showRagePopup(); return; }
+  try {
+    if(/[^0-9+\-*/.%() ]/.test(expression)) throw new Error('Invalid');
+    const res = eval(expression);
+    showMainMeme(expression, res);
+    calcCount++;
+    if(calcCount%3===0) rageLevel=Math.min(rageLevel+1,10);
+    localStorage.setItem('kawaii_rage',rageLevel); localStorage.setItem('kawaii_calcs',calcCount);
+    updateRageUI();
+  } catch(e) {
+    playSound('error'); display.textContent='Error '; setTimeout(()=>updateDisplay(),1500);
+  }
 }
 
 function updateRageUI() {
-  rageFill.style.width = `${(rageLevel / 10) * 100}%`;
-  if (rageLevel >= 7) rageFill.style.background = 'linear-gradient(90deg, #ff69b4, #ff1493, #c71585)';
+  rageFill.style.width=`${(rageLevel/10)*100}%`;
+  if(rageLevel>=7) rageFill.style.background='linear-gradient(90deg,#c44dff,#ff6b9d,#ffe66d)';
 }
-function triggerMiniRage(msg) { display.textContent = msg; setTimeout(() => updateDisplay(), 800); }
-
 function showRagePopup() {
-  const msgs = [
-    { t: '💖 System Overload!', x: 'Hello Kitty needs a nap! Wait 3 seconds...', d: 3000 },
-    { t: '🌸 Update Required!', x: 'Downloading kawaii patch 2.4... (fake)', d: 2500 },
-    { t: '🎀 Battery Low!', x: 'Please shake your device to continue.', d: 2000 },
-    { t: '😾 Too Many Numbers!', x: 'You broke the math. Try again nicely.', d: 1500 }
+  const msgs=[
+    {t:'💖 System Overload!',x:'Kitty needs a nap! Wait 3s...',d:3000},
+    {t:'🌈 Update Required!',x:'Downloading sparkle patch...',d:2500},
+    {t:'🎀 Battery Low!',x:'Shake device to continue.',d:2000},
+    {t:'😾 Too Many Numbers!',x:'Broke the math. Try again.',d:1500}
   ];
-  const pick = msgs[Math.floor(Math.random() * msgs.length)];
-  popup.innerHTML = `<h2>${pick.t}</h2><p>${pick.x}</p><button class="btn-kawaii" onclick="closeRage()">OK, I'll wait 😌</button>`;
-  overlay.classList.add('active');
-  setTimeout(() => { closeRage(); }, pick.d);
+  const p=msgs[Math.floor(Math.random()*msgs.length)];
+  popup.innerHTML=`<h2>${p.t}</h2><p>${p.x}</p><button class="btn-kawaii" onclick="closeRage()">OK 😌</button>`;
+  overlay.classList.add('active'); setTimeout(()=>closeRage(),p.d);
 }
 function closeRage() { playSound('click'); overlay.classList.remove('active'); }
 
-document.querySelector('.header h1').addEventListener('click', () => {
-  if (confirm('Reset rage to 1? (Cheater 😏)')) {
-    rageLevel = 1; calcCount = 0; shownInCycle.clear(); memeQueue = ['faaahhh', 'sadviolin', 'meowgop', 'tuco'];
-    localStorage.setItem('kawaii_rage', 1); localStorage.setItem('kawaii_calcs', 0);
-    updateRageUI(); expression = ''; updateDisplay(); playSound('success');
+document.querySelector('.header h1').addEventListener('click',()=>{
+  if(confirm('Reset rage? (Cheater 😏)')){
+    rageLevel=1;calcCount=0;shown.clear();queue=['faaahhh','sadviolin','meowgop','tuco'];
+    localStorage.setItem('kawaii_rage',1);localStorage.setItem('kawaii_calcs',0);
+    updateRageUI();expression='';updateDisplay();playSound('success');
   }
 });
 </script>
